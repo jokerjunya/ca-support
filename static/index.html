@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CA Support System - ダッシュボード</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px; margin-bottom: 30px; }
+        .header h1 { margin: 0; font-size: 2.5em; }
+        .header p { margin: 10px 0 0 0; opacity: 0.9; }
+        .header .badge { background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; font-size: 0.9em; display: inline-block; margin-top: 10px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+        .stat-number { font-size: 2.5em; font-weight: bold; color: #667eea; margin-bottom: 5px; }
+        .stat-label { color: #666; font-size: 0.9em; }
+        .section { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .section h2 { margin-top: 0; color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px; }
+        .application-list, .task-list { display: grid; gap: 15px; }
+        .application-item, .task-item { padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #fafafa; cursor: pointer; transition: all 0.3s; }
+        .application-item:hover, .task-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); transform: translateY(-2px); }
+        .application-header, .task-header { font-weight: bold; color: #333; margin-bottom: 8px; }
+        .status { padding: 4px 12px; border-radius: 20px; font-size: 0.8em; font-weight: bold; color: white; }
+        .status.reviewing { background-color: #ff9800; }
+        .status.interviewing { background-color: #2196f3; }
+        .status.offered { background-color: #4caf50; }
+        .priority { padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+        .priority.high { background-color: #f44336; color: white; }
+        .priority.medium { background-color: #ff9800; color: white; }
+        .priority.low { background-color: #4caf50; color: white; }
+        .score { display: inline-block; margin: 5px; }
+        .score-label { font-size: 0.8em; color: #666; }
+        .score-value { font-weight: bold; color: #667eea; }
+        .loading { text-align: center; padding: 40px; color: #666; }
+        .error { text-align: center; padding: 40px; color: #f44336; }
+        .demo-notice { background: #e8f4f8; border: 1px solid #b3e5fc; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .demo-notice h3 { margin: 0 0 10px 0; color: #0277bd; }
+        .demo-notice p { margin: 0; color: #0277bd; }
+        .github-link { display: inline-block; background: #333; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 CA Support System</h1>
+            <p>キャリアアドバイザー支援システム</p>
+            <div class="badge">📱 Netlify版デモ</div>
+        </div>
+        
+        <div class="demo-notice">
+            <h3>🚀 デモ版について</h3>
+            <p>このデモは静的サイトとして動作します。実際のシステムは専用サーバーで稼働し、リアルタイムデータ処理を行います。</p>
+            <a href="https://github.com/jokerjunya/ca-support" class="github-link">📂 GitHub リポジトリ</a>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">進行中の案件</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">4</div>
+                <div class="stat-label">未完了タスク</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">候補者</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">2</div>
+                <div class="stat-label">緊急タスク</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📋 進行中の案件</h2>
+            <div class="application-list" id="applications">
+                <div class="loading">データを読み込み中...</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📝 未完了タスク</h2>
+            <div class="task-list" id="tasks">
+                <div class="loading">データを読み込み中...</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // サンプルデータ
+        const sampleApplications = [
+            {
+                id: "app_001",
+                candidate_name: "田中太郎",
+                company: "Acme株式会社",
+                job_title: "シニアエンジニア",
+                status: "書類選考中",
+                enthusiasm_score: 0.8,
+                concern_score: 0.3,
+                latest_summary: "技術力は高いが、転職理由を詳しく聞く必要がある。現在の年収が700万円で、希望が800万円なので条件面は問題なし。"
+            },
+            {
+                id: "app_002",
+                candidate_name: "佐藤花子",
+                company: "Tech Corp",
+                job_title: "プロダクトマネージャー",
+                status: "面接調整中",
+                enthusiasm_score: 0.9,
+                concern_score: 0.2,
+                latest_summary: "マネジメント経験豊富で即戦力として期待。年収交渉が必要だが、企業側も前向き。面接日程の調整を急ぐ。"
+            },
+            {
+                id: "app_003",
+                candidate_name: "鈴木一郎",
+                company: "StartUp Inc",
+                job_title: "フロントエンドエンジニア",
+                status: "内定",
+                enthusiasm_score: 0.7,
+                concern_score: 0.6,
+                latest_summary: "技術的にはマッチしているが、給与面で悩んでいる様子。スタートアップの将来性に不安を感じている。"
+            }
+        ];
+        
+        const sampleTasks = [
+            {
+                id: "task_001",
+                description: "CSへ面接候補日を提示",
+                candidate_name: "田中太郎",
+                company: "Acme株式会社",
+                owner: "CA",
+                due: "2025-07-05",
+                priority: "high",
+                status: "open"
+            },
+            {
+                id: "task_002",
+                description: "候補日をRAに転送",
+                candidate_name: "佐藤花子",
+                company: "Tech Corp",
+                owner: "CA",
+                due: "2025-07-04",
+                priority: "medium",
+                status: "open"
+            },
+            {
+                id: "task_003",
+                description: "労働条件確認依頼をCSに送付",
+                candidate_name: "鈴木一郎",
+                company: "StartUp Inc",
+                owner: "CA",
+                due: "2025-07-06",
+                priority: "high",
+                status: "open"
+            },
+            {
+                id: "task_004",
+                description: "給与条件の再交渉",
+                candidate_name: "鈴木一郎",
+                company: "StartUp Inc",
+                owner: "CA",
+                due: "2025-07-04",
+                priority: "high",
+                status: "open"
+            }
+        ];
+        
+        // アプリケーションデータの表示
+        function loadApplications() {
+            const container = document.getElementById('applications');
+            container.innerHTML = sampleApplications.map(app => `
+                <div class="application-item" onclick="showApplicationDetail('${app.id}')">
+                    <div class="application-header">
+                        ${app.candidate_name} → ${app.company} (${app.job_title})
+                    </div>
+                    <div>
+                        <span class="status ${app.status.includes('書類') ? 'reviewing' : app.status.includes('面接') ? 'interviewing' : 'offered'}">
+                            ${app.status}
+                        </span>
+                        <span class="score">
+                            <span class="score-label">熱意:</span>
+                            <span class="score-value">${(app.enthusiasm_score * 100).toFixed(0)}%</span>
+                        </span>
+                        <span class="score">
+                            <span class="score-label">懸念:</span>
+                            <span class="score-value">${(app.concern_score * 100).toFixed(0)}%</span>
+                        </span>
+                    </div>
+                    <div style="margin-top: 8px; color: #666; font-size: 0.9em;">
+                        ${app.latest_summary}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // タスクデータの表示
+        function loadTasks() {
+            const container = document.getElementById('tasks');
+            container.innerHTML = sampleTasks.map(task => `
+                <div class="task-item">
+                    <div class="task-header">
+                        ${task.description}
+                    </div>
+                    <div>
+                        <span class="priority ${task.priority}">${task.priority.toUpperCase()}</span>
+                        <span style="margin-left: 10px; color: #666;">
+                            担当: ${task.owner} | 期限: ${task.due}
+                        </span>
+                    </div>
+                    <div style="margin-top: 5px; color: #666; font-size: 0.9em;">
+                        ${task.candidate_name} - ${task.company}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // 案件詳細表示
+        function showApplicationDetail(appId) {
+            const app = sampleApplications.find(a => a.id === appId);
+            if (app) {
+                window.location.href = `application.html?id=${appId}`;
+            }
+        }
+        
+        // ページ読み込み時の処理
+        document.addEventListener('DOMContentLoaded', function() {
+            loadApplications();
+            loadTasks();
+        });
+    </script>
+</body>
+</html> 
