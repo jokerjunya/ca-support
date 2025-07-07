@@ -1,0 +1,412 @@
+{
+  "登録完了": {
+    "description": "サービス登録完了、面談予定調整中",
+    "phase": "初期段階",
+    "possible_next_statuses": [
+      "面談予定"
+    ],
+    "required_actions": [
+      {
+        "action_id": "schedule_interview",
+        "description": "面談日程調整",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 3,
+        "required_info": []
+      },
+      {
+        "action_id": "send_reminder",
+        "description": "リマインド送信",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "登録お礼",
+      "リマインド"
+    ]
+  },
+  "面談完了": {
+    "description": "面談完了、求人紹介準備中",
+    "phase": "初期段階",
+    "possible_next_statuses": [
+      "求人紹介中"
+    ],
+    "required_actions": [
+      {
+        "action_id": "send_interview_thanks",
+        "description": "面談お礼送信",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      },
+      {
+        "action_id": "recommend_jobs",
+        "description": "求人紹介",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 3,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "面談お礼",
+      "求人紹介"
+    ]
+  },
+  "求人紹介中": {
+    "description": "求人紹介済み、応募意思確認中",
+    "phase": "求人紹介段階",
+    "possible_next_statuses": [
+      "応募済み"
+    ],
+    "required_actions": [
+      {
+        "action_id": "confirm_application",
+        "description": "応募意思確認",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 3,
+        "required_info": []
+      },
+      {
+        "action_id": "document_reminder",
+        "description": "応募書類リマインド",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 5,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "求人紹介",
+      "応募書類リマインド"
+    ]
+  },
+  "応募済み": {
+    "description": "応募完了、書類選考中",
+    "phase": "応募段階",
+    "possible_next_statuses": [
+      "書類通過",
+      "書類不合格"
+    ],
+    "required_actions": [
+      {
+        "action_id": "send_application_thanks",
+        "description": "応募お礼送信",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      },
+      {
+        "action_id": "follow_up_screening",
+        "description": "書類選考状況確認",
+        "responsible_role": "リクルーティングアドバイザー",
+        "deadline_days": 7,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "応募お礼"
+    ]
+  },
+  "書類通過": {
+    "description": "書類選考通過、面接日程調整中",
+    "phase": "書類選考段階",
+    "possible_next_statuses": [
+      "面接予定"
+    ],
+    "required_actions": [
+      {
+        "action_id": "notify_document_pass",
+        "description": "書類通過通知",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      },
+      {
+        "action_id": "schedule_interview_company",
+        "description": "面接日程調整",
+        "responsible_role": "リクルーティングアドバイザー",
+        "deadline_days": 3,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "書類通過(CA→CS)",
+      "書類通過(RA→CA)"
+    ]
+  },
+  "書類不合格": {
+    "description": "書類選考不合格、他の求人検討",
+    "phase": "書類選考段階",
+    "possible_next_statuses": [
+      "求人紹介中"
+    ],
+    "required_actions": [
+      {
+        "action_id": "notify_document_reject",
+        "description": "書類不合格通知",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      },
+      {
+        "action_id": "recommend_alternative_jobs",
+        "description": "代替求人紹介",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 3,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "書類お見送り"
+    ]
+  },
+  "面接日程調整中": {
+    "description": "面接日程調整中",
+    "phase": "面接段階",
+    "possible_next_statuses": [
+      "面接予定"
+    ],
+    "required_actions": [
+      {
+        "action_id": "confirm_interview_schedule",
+        "description": "面接日程最終確認",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 2,
+        "required_info": []
+      },
+      {
+        "action_id": "send_schedule_fix",
+        "description": "日程確定通知",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "日程最終確認(CA→CS)",
+      "日程最終確認(RA→CA)",
+      "日程FIX連絡"
+    ]
+  },
+  "面接完了": {
+    "description": "面接完了、感想・結果待ち",
+    "phase": "面接段階",
+    "possible_next_statuses": [
+      "面接通過",
+      "面接不合格"
+    ],
+    "required_actions": [
+      {
+        "action_id": "request_interview_feedback",
+        "description": "面接感想依頼",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      },
+      {
+        "action_id": "follow_up_interview_result",
+        "description": "面接結果確認",
+        "responsible_role": "リクルーティングアドバイザー",
+        "deadline_days": 3,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "面接感想依頼",
+      "面接感想連携"
+    ]
+  },
+  "面接通過": {
+    "description": "面接通過、次回面接または意向確認",
+    "phase": "選考段階",
+    "possible_next_statuses": [
+      "面接予定",
+      "意向確認中"
+    ],
+    "required_actions": [
+      {
+        "action_id": "notify_interview_pass",
+        "description": "面接通過通知",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      },
+      {
+        "action_id": "schedule_next_interview",
+        "description": "次回面接調整",
+        "responsible_role": "リクルーティングアドバイザー",
+        "deadline_days": 3,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "面接結果＋日程調整(CA→CS)"
+    ]
+  },
+  "意向確認中": {
+    "description": "意向確認中",
+    "phase": "選考段階",
+    "possible_next_statuses": [
+      "内定通知",
+      "追加情報依頼中"
+    ],
+    "required_actions": [
+      {
+        "action_id": "request_intention",
+        "description": "意向確認依頼",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 2,
+        "required_info": []
+      },
+      {
+        "action_id": "share_intention_result",
+        "description": "意向確認結果共有",
+        "responsible_role": "リクルーティングアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "意向確認(CA→CS)",
+      "意向確認返信(CS→CA)",
+      "意向確認接続(CA→RA)"
+    ]
+  },
+  "追加情報依頼中": {
+    "description": "追加情報依頼中",
+    "phase": "選考段階",
+    "possible_next_statuses": [
+      "意向確認中"
+    ],
+    "required_actions": [
+      {
+        "action_id": "request_additional_info",
+        "description": "追加情報依頼",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 2,
+        "required_info": []
+      },
+      {
+        "action_id": "share_additional_info",
+        "description": "追加情報共有",
+        "responsible_role": "リクルーティングアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "追加情報依頼(CA→CS)",
+      "追加情報依頼(RA→CA)",
+      "追加情報返信(CA→RA)",
+      "追加情報返信(CS→CA)"
+    ]
+  },
+  "内定通知": {
+    "description": "内定通知、検討中",
+    "phase": "内定段階",
+    "possible_next_statuses": [
+      "内定承諾",
+      "内定辞退"
+    ],
+    "required_actions": [
+      {
+        "action_id": "notify_offer",
+        "description": "内定通知",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      },
+      {
+        "action_id": "follow_up_offer_decision",
+        "description": "内定回答確認",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 3,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "内定連絡(CA→CS)",
+      "内定連絡(RA→CA)"
+    ]
+  },
+  "内定承諾": {
+    "description": "内定承諾、退職交渉開始",
+    "phase": "内定段階",
+    "possible_next_statuses": [
+      "退職交渉中"
+    ],
+    "required_actions": [
+      {
+        "action_id": "process_offer_acceptance",
+        "description": "内定承諾手続き",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      },
+      {
+        "action_id": "start_resignation_support",
+        "description": "退職交渉サポート開始",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 3,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "正式内定ログ(CA→CS)",
+      "内定受諾(CS→CA)",
+      "内定受諾(CA→RA)"
+    ]
+  },
+  "退職交渉中": {
+    "description": "退職交渉中",
+    "phase": "入社準備段階",
+    "possible_next_statuses": [
+      "退職完了"
+    ],
+    "required_actions": [
+      {
+        "action_id": "support_resignation",
+        "description": "退職交渉サポート",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 7,
+        "required_info": []
+      },
+      {
+        "action_id": "confirm_resignation_status",
+        "description": "退職状況確認",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 3,
+        "required_info": []
+      }
+    ],
+    "available_templates": [
+      "退職交渉ログ(CA→CS)",
+      "退職交渉ログ(CS→CA)",
+      "退職交渉ログ(CA→RA)"
+    ]
+  },
+  "退職完了": {
+    "description": "退職完了、入社準備中",
+    "phase": "入社準備段階",
+    "possible_next_statuses": [
+      "入社完了"
+    ],
+    "required_actions": [
+      {
+        "action_id": "confirm_onboarding",
+        "description": "入社準備確認",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 5,
+        "required_info": []
+      },
+      {
+        "action_id": "final_support",
+        "description": "最終サポート",
+        "responsible_role": "キャリアアドバイザー",
+        "deadline_days": 1,
+        "required_info": []
+      }
+    ],
+    "available_templates": []
+  }
+}
